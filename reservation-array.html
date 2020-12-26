@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        function addAttendees() {
+           getANewAttendee();
+            attendeesName.sort();
+           displayAttendees();
+           resetDataEntryFields();
+        }
+
+        function getANewAttendee(){
+            var attName = document.getElementById("attName").value;
+            attendeesName.push(attName);
+        }
+
+        function resetDataEntryFields(){
+            var attName = document.getElementById("attName").value = "";
+        }
+
+        function displayAttendees(){
+            var body = document.getElementById("attTableBody");
+            body.innerHTML=""; // remove previous rows
+            for (var i = 0; i < attendeesName.length; i++) {
+                var row = document.createElement("tr");
+                var cell = document.createElement("td");
+                cell.innerHTML = attendeesName[i];
+                row.appendChild(cell);
+                body.appendChild(row);
+            }
+        }
+        var attendeesName = [];
+    </script>
+</head>
+
+<body>
+    <form>
+        <div class="registrationRow">
+            <label for="attName">Full name:</label>
+            <input type="text" name="attName" id="attName">
+        </div>
+        <div>
+            <input type="button" value="Register" onclick="addAttendees();">
+        </div>
+        <table border="1px">
+            <thead>
+                <tr>
+                    <td>Full Name</td>
+            </thead>
+            <tbody id="attTableBody"></tbody>
+        </table>
+    </form>
+</body>
+<script>
+    
+</script>
+
+</html>
