@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        function compareEvents(a,b){
+            if (a.Name < b.Name) return -1;
+            if (a.Name > b.Name) return 1;
+                //equal full names
+            if (a.Venue < b.Venue) return -1;
+            if (a.Venue > b.Venue) return 1;
+        }
+        function addEvents() {
+           getANewEvent();
+            eventArray.sort(compareEvents);
+           displayEvents();
+           resetDataEntryFields();
+        }
+
+        function getANewEvent(){
+            var evName = document.getElementById("evName").value;
+            var evStartingDate= document.getElementById("evStartingDate").value;
+            var evEndingDate= document.getElementById("evEndingDate").value;
+            var evVenue= document.getElementById("evVenue").value;
+            var evPrice= document.getElementById("evPrice").value;
+
+            var event = {
+                Name : evName,
+                StartingDate : evStartingDate,
+                EndingDate : evEndingDate,
+                Venue : evVenue,
+                Price : evPrice
+            };
+            eventArray.push(event);
+        }
+
+        function resetDataEntryFields(){
+            var evName = document.getElementById("evName").value ="";
+            var evStartingDate= document.getElementById("evStartingDate").value="";
+            var evEndingDate= document.getElementById("evEndingDate").value="";
+            var evVenue= document.getElementById("evVenue").value="";
+            var evPrice= document.getElementById("evPrice").value="";
+        }
+
+        function displayEvents(){
+            var body = document.getElementById("evTableBody");
+            body.innerHTML=""; // remove previous rows
+
+            for (var i = 0; i < eventArray.length; i++) {
+                var row = document.createElement("tr");
+
+                var cell = document.createElement("td");
+                cell.innerHTML = eventArray[i].Name;
+                row.appendChild(cell);
+
+                cell = document.createElement("td");
+                cell.innerHTML = eventArray[i].StartingDate;
+                row.appendChild(cell);
+
+                cell = document.createElement("td");
+                cell.innerHTML = eventArray[i].EndingDate;
+                row.appendChild(cell);
+
+                cell = document.createElement("td");
+                cell.innerHTML = eventArray[i].Venue;
+                row.appendChild(cell);
+                
+                cell = document.createElement("td");
+                cell.innerHTML = eventArray[i].Price;
+                row.appendChild(cell);
+                
+                body.appendChild(row);
+            }
+        }
+        var eventArray = [];
+    </script>
+</head>
+
+<body>
+    <form>
+        <div class="registrationRow">
+            <label for="evName">Name:</label>
+            <input type="text" name="evName" id="evName">
+        </div>
+        <div class="registrationRow">
+            <label for="evStartingDate">Starting Date:</label>
+            <input type="text" name="evStartingDate" id="evStartingDate">
+        </div>
+        <div class="registrationRow">
+            <label for="evEndingDate">Ending Date:</label>
+            <input type="text" name="evEndingDate" id="evEndingDate">
+        </div>
+        <div class="registrationRow">
+            <label for="evVenue">Venue:</label>
+            <input type="text" name="evVenue" id="evVenue">
+        </div>
+        <div class="registrationRow">
+            <label for="evPrice">Price:</label>
+            <input type="int" name="evPrice" id="evPrice">
+        </div>
+        <div>
+            <input type="button" value="Register" onclick="addEvents();">
+        </div>
+        <table border="1px">
+            <thead>
+                <tr>
+                    <td>Name</td>
+                    <td>Starting Date</td>
+                    <td>Ending Date</td>
+                    <td>Venue</td>
+                    <td>Price</td>
+            </thead>
+            <tbody id="evTableBody"></tbody>
+        </table>
+    </form>
+    
+</body>
+</html>

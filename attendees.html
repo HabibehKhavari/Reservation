@@ -10,8 +10,8 @@
             if (a.fullName < b.fullName) return -1;
             if (a.fullName > b.fullName) return 1;
                 //equal full names
-            if (a.Company < b.Company) return 1;
             if (a.Company < b.Company) return -1;
+            if (a.Company > b.Company) return 1;
         }
         function addAttendees() {
            getANewAttendee();

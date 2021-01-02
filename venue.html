@@ -10,8 +10,8 @@
             if (a.Name < b.Name) return -1;
             if (a.Name > b.lName) return 1;
                 //equal full names
-            if (a.Address < b.Address) return 1;
             if (a.Address < b.Address) return -1;
+            if (a.Address > b.Address) return 1;
         }
         function addVenues() {
            getANewVenue();
