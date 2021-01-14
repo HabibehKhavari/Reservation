@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Event</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+        integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
 
     <script>
         function compareEvents(a, b) {
@@ -82,7 +84,34 @@
 </head>
 
 <body>
+
+    <!-- navebar -->
+    <ul>
+        <li title="Events">
+            <a class="active">
+                <i class="fa fa-list-ul"></i>
+            </a>
+        </li>
+        <li title="Attendees">
+            <a href="C:\Users\User\Desktop\Reservation\attendees.html">
+                <i class="fa fa-user"></i>
+            </a>
+        </li>
+        <li title="Venues">
+            <a href="C:\Users\User\Desktop\Reservation\venue.html">
+                <i class="fa fa-map-marker"></i>
+            </a>
+        </li>
+        <li title="Contact us" style="float:right">
+            <a>
+                <i class="fa fa-phone-square"></i>
+            </a>
+        </li>
+    </ul>
+
+
     <div><img id="Welcome" src="https://thumbs.gfycat.com/UniqueBiodegradableGartersnake-size_restricted.gif"></div>
+
     <div id="dataSection" class="dataSection">
         <form>
             <div class="registrationRow">
@@ -109,24 +138,24 @@
                 <input class="button" type="button" value="Register" onclick="addEvents();">
             </div>
         </form>
-            <table border="1px">
-                <thead>
-                    <tr>
-                        <td> Name </td>
-                        <td> Starting Date </td>
-                        <td> Ending Date </td>
-                        <td> Venue </td>
-                        <td> Price </td>
-                </thead>
-                <tbody id="evTableBody"></tbody>
-            </table>
+        <table border="1px">
+            <thead>
+                <tr>
+                    <td> Name </td>
+                    <td> Starting Date </td>
+                    <td> Ending Date </td>
+                    <td> Venue </td>
+                    <td> Price </td>
+            </thead>
+            <tbody id="evTableBody"></tbody>
+        </table>
     </div>
     <script>
 
         document.getElementById("Welcome").hidden = false;
         document.getElementById("dataSection").hidden = true;
         //3sec  3000 ms
-        window.setTimeout(function (){
+        window.setTimeout(function () {
             document.getElementById("Welcome").hidden = true;
             document.getElementById("dataSection").hidden = false;
         }, 3000);
