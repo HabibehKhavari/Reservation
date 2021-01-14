@@ -4,36 +4,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Venue</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed&display=swap" rel="stylesheet">
+
     <script>
-        function compareVenues(a,b){
-            if (a.Name < b.Name) return -1;
-            if (a.Name > b.lName) return 1;
-                //equal full names
-            if (a.Address < b.Address) return -1;
-            if (a.Address > b.Address) return 1;
+        function compareVenues(a, b) {
+            if (a.Name.toUpperCase() < b.Name.toUpperCase()) return -1;
+            if (a.Name.toUpperCase() > b.Name.toUpperCase()) return 1;
+            //equal full names
+            if (a.Address.toUpperCase() < b.Address.toUpperCase()) return -1;
+            if (a.Address.toUpperCase() > b.Address.toUpperCase()) return 1;
         }
         function addVenues() {
-           getANewVenue();
+            getANewVenue();
             venueArray.sort(compareVenues);
-           displayVenues();
-           resetDataEntryFields();
+            displayVenues();
+
+            resetDataEntryFields();
         }
 
-        function getANewVenue(){
+        function getANewVenue() {
             var vName = document.getElementById("vName").value;
             var vAddress = document.getElementById("vAddress").value;
-            var vEmail= document.getElementById("vEmail").value;
+            var vEmail = document.getElementById("vEmail").value;
 
             var venue = {
-                Name : vName,
-                Address : vAddress,
-                Email : vEmail
+                Name: vName,
+                Address: vAddress,
+                Email: vEmail
             };
             venueArray.push(venue);
         }
 
-        function resetDataEntryFields(){
+        function resetDataEntryFields() {
             var vName = document.getElementById("vName").value = "";
             var vAddress = document.getElementById("vAddress").value = "";
             var vEmail = document.getElementById("vEmail").value = "";
@@ -65,34 +70,35 @@
 </head>
 
 <body>
-    <form>
-        <div>
-            <label for="vName">Name:</label>
-            <input type="text" name="vName" id="vName">
-        </div>
-        <div>
-            <label for="vAddress">Address:</label>
-            <input type="text" name="vAddress" id="vAddress">
-        </div>
-        <div>
-            <label for="vEmail">Email:</label>
-            <input type="text" name="vEmail" id="vEmail">
-        </div>
-        <div>
-            <input type="button" value="Register" onclick="addVenues();">
-        </div>
-    </form>
-    <table border="1px">
-        <thead>
-            <tr>
-                <td>Name</td>
-                <td>Address</td>
-                <td>Email</td>
-            </tr>
-        </thead>
-        <tbody id="venueTableBoby"></tbody>
-    </table>
-
+    <div class="dataSection">
+        <form>
+            <div>
+                <label for="vName">Name:</label>
+                <input type="text" name="vName" id="vName">
+            </div>
+            <div>
+                <label for="vAddress">Address:</label>
+                <input type="text" name="vAddress" id="vAddress">
+            </div>
+            <div>
+                <label for="vEmail">Email:</label>
+                <input type="text" name="vEmail" id="vEmail">
+            </div>
+            <div>
+                <input class="button" type="button" value="Register" onclick="addVenues();">
+            </div>
+        </form>
+        <table border="1px">
+            <thead>
+                <tr>
+                    <td> Name </td>
+                    <td> Address </td>
+                    <td> Email </td>
+                </tr>
+            </thead>
+            <tbody id="venueTableBoby"></tbody>
+        </table>
+    </div>
 </body>
 
 </html>

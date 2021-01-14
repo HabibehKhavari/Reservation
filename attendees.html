@@ -4,47 +4,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Attendees</title>
+    <link rel="stylesheet" href="style.css">
+
     <script>
-        function compareAttendees(a,b){
+        function compareAttendees(a, b) {
             if (a.fullName < b.fullName) return -1;
             if (a.fullName > b.fullName) return 1;
-                //equal full names
+            //equal full names
             if (a.Company < b.Company) return -1;
             if (a.Company > b.Company) return 1;
         }
         function addAttendees() {
-           getANewAttendee();
+            getANewAttendee();
             attendeesName.sort(compareAttendees);
-           displayAttendees();
-           resetDataEntryFields();
+            displayAttendees();
+            resetDataEntryFields();
         }
 
-        function getANewAttendee(){
+        function getANewAttendee() {
             var attName = document.getElementById("attName").value;
-            var attCompany= document.getElementById("attCompany").value;
-            var attExperience= document.getElementById("attExperience").value;
-            var attEmail= document.getElementById("attEmail").value;
+            var attCompany = document.getElementById("attCompany").value;
+            var attExperience = document.getElementById("attExperience").value;
+            var attEmail = document.getElementById("attEmail").value;
 
             var attendee = {
-                fullName : attName,
-                Company : attCompany,
-                Experience : attExperience,
-                Email : attEmail
+                fullName: attName,
+                Company: attCompany,
+                Experience: attExperience,
+                Email: attEmail
             };
             attendeesName.push(attendee);
         }
 
-        function resetDataEntryFields(){
+        function resetDataEntryFields() {
             var attName = document.getElementById("attName").value = "";
             var attCompany = document.getElementById("attCompany").value = "";
             var attExperience = document.getElementById("attExperience").value = "";
             var attEmail = document.getElementById("attEmail").value = "";
         }
 
-        function displayAttendees(){
+        function displayAttendees() {
             var body = document.getElementById("attTableBody");
-            body.innerHTML=""; // remove previous rows
+            body.innerHTML = ""; // remove previous rows
 
             for (var i = 0; i < attendeesName.length; i++) {
                 var row = document.createElement("tr");
@@ -64,46 +66,71 @@
                 cell = document.createElement("td");
                 cell.innerHTML = attendeesName[i].Email;
                 row.appendChild(cell);
-                
+
                 body.appendChild(row);
             }
         }
         var attendeesName = [];
+
+
+        function loadFromServer() {
+            // AJAX request from the server
+            var req = new XMLHttpRequest();
+            req.open("GET", "http://127.0.0.1:3000/");
+            req.onload = function () {
+                console.log(req.status);
+                if (req.status == 200) {
+                    attendees = JSON.parse(req.response);
+                    displayAttendees();
+                } else {
+                    attendees = [];
+                    displayAttendees();
+                    console.error("Problem loading attendees : " + req.status);
+                }
+            };
+            req.send();
+        }
+        loadFromServer();
+
+
     </script>
 </head>
 
 <body>
-    <form>
-        <div class="registrationRow">
-            <label for="attName">Full name:</label>
-            <input type="text" name="attName" id="attName">
-        </div>
-        <div class="registrationRow">
-            <label for="attCompany">Company:</label>
-            <input type="text" name="attCompany" id="attCompany">
-        </div>
-        <div class="registrationRow">
-            <label for="attExperience">Experience:</label>
-            <input type="int" name="attExperience" id="attExperience">
-        </div>
-        <div class="registrationRow">
-            <label for="attEmail">Email:</label>
-            <input type="text" name="attEmail" id="attEmail">
-        </div>
-        <div>
-            <input type="button" value="Register" onclick="addAttendees();">
-        </div>
+    <div class="dataSection">
+        <form>
+            <div class="registrationRow">
+                <label for="attName">Full name:</label>
+                <input type="text" name="attName" id="attName">
+            </div>
+            <div class="registrationRow">
+                <label for="attCompany">Company:</label>
+                <input type="text" name="attCompany" id="attCompany">
+            </div>
+            <div class="registrationRow">
+                <label for="attExperience">Experience:</label>
+                <input type="int" name="attExperience" id="attExperience">
+            </div>
+            <div class="registrationRow">
+                <label for="attEmail">Email:</label>
+                <input type="text" name="attEmail" id="attEmail">
+            </div>
+            <div>
+                <input class="button" type="button" value="Register" onclick="addAttendees();">
+                <input class="button" type="button" value="Refresh" onclick="loadFromServer();">
+            </div>
+        </form>
         <table border="1px">
             <thead>
                 <tr>
-                    <td>Full Name</td>
-                    <td>Company</td>
-                    <td>Experience</td>
-                    <td>Email</td>
+                    <td> Full Name </td>
+                    <td> Company </td>
+                    <td> Experience </td>
+                    <td> Email </td>
             </thead>
             <tbody id="attTableBody"></tbody>
         </table>
-    </form>
+    </div>
 </body>
 
 </html>
