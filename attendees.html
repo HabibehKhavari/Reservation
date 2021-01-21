@@ -9,35 +9,52 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Yusei+Magic&display=swap" rel="stylesheet">
     <script>
+        var attendeesName = [];
 
         function compareAttendees(a, b) {
-            if (a.fullName < b.fullName) return -1;
-            if (a.fullName > b.fullName) return 1;
+            if (a.fullname < b.fullname) return -1;
+            if (a.fullname > b.fullname) return 1;
             //equal full names
-            if (a.Company < b.Company) return -1;
-            if (a.Company > b.Company) return 1;
+            if (a.company < b.company) return -1;
+            if (a.company > b.company) return 1;
+            
+            return 0;
         }
-        function addAttendees() {
-            getANewAttendee();
-            attendeesName.sort(compareAttendees);
-            displayAttendees();
+        function addAttendee() {
+            // will make AJAX request instead
+            const req = new XMLHttpRequest();
+            req.open("POST", "http://127.0.0.1:3000/attendees", true);
+            // set headers
+            req.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            // callback when the the request is served
+            req.onload = () => {
+                console.log("Data sent to the server");
+                loadFromServer();
+            }
+            console.log("Sendinf data to the server");
+            req.send("fullname=" + document.getElementById("attName").value + "&company=" + document.getElementById("attCompany").value + "&experience=" + document.getElementById("attExperience").value + "&email=" + document.getElementById("attEmail").value);
+            
+            //getANewAttendee();
+
+            ////////////////////////////////////////
+           // displayAttendees();
             resetDataEntryFields();
         }
 
-        function getANewAttendee() {
-            var attName = document.getElementById("attName").value;
-            var attCompany = document.getElementById("attCompany").value;
-            var attExperience = document.getElementById("attExperience").value;
-            var attEmail = document.getElementById("attEmail").value;
+        // function getANewAttendee() {
+        //     var attName = document.getElementById("attName").value;
+        //     var attCompany = document.getElementById("attCompany").value;
+        //     var attExperience = document.getElementById("attExperience").value;
+        //     var attEmail = document.getElementById("attEmail").value;
 
-            var attendee = {
-                fullName: attName,
-                Company: attCompany,
-                Experience: attExperience,
-                Email: attEmail
-            };
-            attendeesName.push(attendee);
-        }
+        //     var attendee = {
+        //         fullName: attName,
+        //         company: attCompany,
+        //         experience: attExperience,
+        //         email: attEmail
+        //     };
+        //     attendeesName.push(attendee);
+        // }
 
         function resetDataEntryFields() {
             var attName = document.getElementById("attName").value = "";
@@ -47,53 +64,134 @@
         }
 
         function displayAttendees() {
-            var body = document.getElementById("attTableBody");
+            attendeesName.sort(compareAttendees);
+
+            const body = document.getElementById("attTableBody");
             body.innerHTML = ""; // remove previous rows
 
-            for (var i = 0; i < attendeesName.length; i++) {
-                var row = document.createElement("tr");
+            for (let i = 0; i < attendeesName.length; i++) {
+                const row = document.createElement("tr");
 
-                var cell = document.createElement("td");
-                cell.innerHTML = attendeesName[i].fullName;
+                let cell = document.createElement("td");
+                cell.innerHTML = attendeesName[i].id;
                 row.appendChild(cell);
 
                 cell = document.createElement("td");
-                cell.innerHTML = attendeesName[i].Company;
+                cell.innerHTML = attendeesName[i].fullname;
                 row.appendChild(cell);
 
                 cell = document.createElement("td");
-                cell.innerHTML = attendeesName[i].Experience;
+                cell.innerHTML = attendeesName[i].company;
                 row.appendChild(cell);
 
                 cell = document.createElement("td");
-                cell.innerHTML = attendeesName[i].Email;
+                cell.innerHTML = attendeesName[i].experience;
+                row.appendChild(cell);
+
+                cell = document.createElement("td");
+                cell.innerHTML = attendeesName[i].email;
+                row.appendChild(cell);
+
+                cell = document.createElement("td");
+                cell = document.createElement("button");
+                cell.innerHTML = "Delete";
+                cell.addEventListener(
+                    "click",
+                    function(event) {
+                        deleteOnServer(attendeesName[i].id);
+                    }
+                )
+                row.appendChild(cell);
+
+                cell = document.createElement("button");
+                cell.innerHTML = "Update";
+                cell.addEventListener(
+                    "click",
+                    function(event) {
+                        updateOnServer(attendeesName[i].id);
+                    }
+                )
                 row.appendChild(cell);
 
                 body.appendChild(row);
             }
         }
-        var attendeesName = [];
+       
 
 
         function loadFromServer() {
             // AJAX request from the server
-            var req = new XMLHttpRequest();
-            req.open("GET", "http://127.0.0.1:3000/");
+            const req = new XMLHttpRequest();
+            req.open("GET", "http://127.0.0.1:3000/attendees");
             req.onload = function () {
                 console.log(req.status);
                 if (req.status == 200) {
-                    attendees = JSON.parse(req.response);
+                    attendeesName = JSON.parse(req.response);
                     displayAttendees();
                 } else {
-                    attendees = [];
+                    attendeesName = [];
                     displayAttendees();
                     console.error("Problem loading attendees : " + req.status);
                 }
             };
             req.send();
         }
-        loadFromServer();
+       
+        function deleteOnServer(id) {
+            console.log("Deleting from the server " + id);
+            // AJAX request to the server
+            var req = new XMLHttpRequest();
+            // the DELETE method does not work so ...
+            //req.open("DELETE", "http://127.0.0.1:3000/attendees/"+id);
+            // ... use the workaround with the GET + the DELETE path
+           req.open("GET", "http://127.0.0.1:3000/attendees/DELETE/"+id);
+            req.onload = function () {
+                if (req.status == 200) {
+                    loadFromServer();
+                    alert(JSON.parse(req.response) + " is deleting!");
+                } else {
+                    alert("Could not delete");
+                    console.error("Problem deleting attendees : " + req.status);
+                }
+            };
+            req.send();
+        }
 
+         function searchOnServer() {
+            // AJAX request to the server
+            var req = new XMLHttpRequest();
+            const filter = document.getElementById("searchOnName").value;
+            req.open("GET", "http://127.0.0.1:3000/attendees/?filterName=" + filter);
+            req.onload = function () {
+                if (req.status == 200) {
+                    attendeesName = JSON.parse(req.response);
+                    displayAttendees();
+                } else {
+                    alert("Error searching");
+                    attendeesName = [];
+                    displayAttendees();
+                    console.error("Problem loading attendees : " + req.status);
+                }
+            };
+            req.send();
+        } 
+
+        function updateOnServer(id){
+            /////////////////
+            const req = new XMLHttpRequest();
+            req.open("POST", "http://127.0.0.1:3000/attendees/PUT/",true);
+            // set headers
+            req.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            // callback when the the request is served
+            req.onload = () => {
+                console.log("Data sent to the server");
+                loadFromServer();
+            }
+            console.log("Sendinf data to the server");
+            req.send("id=" + id + "&fullname=" + document.getElementById("attName").value + "&company=" + document.getElementById("attCompany").value + "&experience=" + document.getElementById("attExperience").value + "&email=" + document.getElementById("attEmail").value);
+            
+            resetDataEntryFields();
+        }
 
     </script>
 </head>
@@ -143,7 +241,7 @@
     </ul>
 
     <div class="dataSection">
-        <form>
+        <form method="post" action="http://127.0.0.1:3000/attendees" id="attendeeData">
             <div class="registrationRow">
                 <label for="attName">Full name:</label>
                 <input type="text" name="attName" id="attName">
@@ -161,21 +259,37 @@
                 <input type="text" name="attEmail" id="attEmail">
             </div>
             <div>
-                <input class="button" type="button" value="Register" onclick="addAttendees();">
+                <input class="button" type="button" value="Register" onclick="addAttendee();">
                 <input class="button" type="button" value="Refresh" onclick="loadFromServer();">
+            </div>
+            <div>
+                <input type="text" name="searchOnName" id="searchOnName" placeholder="Search">
+                <input class="button" type="button" value="Search" onclick="searchOnServer();">
             </div>
         </form>
         <table border="1px">
             <thead>
-                <tr>
+                <tr style="background-color: rgb(56, 56, 56); color: white;">
+                    <td> ID </td>
                     <td> Full Name </td>
                     <td> Company </td>
                     <td> Experience </td>
                     <td> Email </td>
+                    <td> Actions </td>
             </thead>
             <tbody id="attTableBody"></tbody>
         </table>
     </div>
 </body>
+<script>
+    loadFromServer();
 
+    document.getElementById("attendeeData")
+    .addEventListener('submit', (event) => {
+        // bypass the default action
+        event.preventDefault();
+
+        addAttendee();
+    });
+</script>
 </html>
